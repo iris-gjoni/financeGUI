@@ -1,0 +1,25 @@
+1) add a correlation metric
+
+2) add a x to Y graph mapping rather than only time-series
+
+3) add ability to overlap many graphs
+
+4) test with other format csv files
+
+5) generate .exe file using pythoninstaller and test running standalone executable
+
+6) add unit tests
+
+import unittest
+from my_module import my_function
+
+class TestMyModule(unittest.TestCase):
+    def test_my_function(self):
+        self.assertEqual(my_function(2, 3), 5)
+        self.assertEqual(my_function(-1, 1), 0)
+        self.assertEqual(my_function(0, 0), 0)
+
+if __name__ == '__main__':
+    unittest.main()
+
+python test_my_module.py
