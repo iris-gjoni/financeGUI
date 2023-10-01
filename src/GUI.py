@@ -69,6 +69,9 @@ def read_file():
         x_field_combobox['values'] = fields_list
         if fields_list.__contains__("Date"):
             x_field_combobox.set("Date")
+        if fields_list.__contains__("date"):
+            x_field_combobox.set("date")
+
 
 def load_data_to_model():
     name = name_combobox.get()
