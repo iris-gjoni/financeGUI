@@ -16,3 +16,4 @@ nasdaq100=QQQ
 SP500=SPY
 Telsa=TSLA
 TenYearTreasury=TNX
+bitcoin_metrics=bitcoin_metrics

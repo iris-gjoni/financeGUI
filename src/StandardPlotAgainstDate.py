@@ -1,5 +1,6 @@
 from datetime import datetime
 import pandas as pd
+import DateFormattingHelper
 
 
 def plot_data(selected_names, y_vals, x_vals, selected_multipliers,
@@ -10,7 +11,9 @@ def plot_data(selected_names, y_vals, x_vals, selected_multipliers,
         # print("final string {}", final_string)
         df = pd.read_csv(final_string)
         if x_vals[i] == 'Date':
-            x_values = [datetime.strptime(date, '%Y-%m-%d') for date in df['Date']]
+            x_values = [DateFormattingHelper.parse_date(date) for date in df['Date']]
+        elif x_vals[i] == 'date':
+            x_values = [DateFormattingHelper.parse_date(date) for date in df['date']]
         else:
             x_values = df[x_vals[i]]
         y_values: float = df[y_vals[i]] * selected_multipliers[i]

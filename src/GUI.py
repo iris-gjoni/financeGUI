@@ -6,7 +6,7 @@ from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import ReadStockNames
 import StandardPlotAgainstDate
-import GUIOrganisation
+import GUISizing
 
 # add new data sets into stockToName.txt
 keyValues = ReadStockNames.read_key_value_file("stockToName.txt")
@@ -23,10 +23,11 @@ graph_types = ['line', 'scatter']
 def clear_data():
     ax.clear()
     y_field_combobox.set('')
+    x_field_combobox.set('')
     canvas.draw()
 
 
-def plot_data_datetime():
+def plot_data():
     selected_names = []
     x_vals = []
     y_vals = []
@@ -71,10 +72,11 @@ def read_file():
 
 def load_data_to_model():
     name = name_combobox.get()
-    field = y_field_combobox.get()
+    y_field = y_field_combobox.get()
+    x_field = x_field_combobox.get()
     multiplier = multiplier_combobox.get()
-    if name and field and multiplier:
-        row = [name, field, "Date", multiplier]
+    if name and x_field and y_field and multiplier:
+        row = [name, y_field, x_field, multiplier]
         listbox.insert(tk.END, row)
 
 
@@ -127,14 +129,14 @@ toolbar_frame = tk.Frame(master=window)
 toolbar_frame.grid(column=1, row=21, columnspan=10, sticky="ew")
 toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
 
-GUIOrganisation.set_grid_sizes(window)
+GUISizing.set_grid_sizes(window)
 
 # Buttons
 read_button = tk.Button(window, text="Read Csv Data", command=read_file)
 read_button.grid(column=0, row=6, padx=3, pady=3, sticky="ew")
 load_button = tk.Button(window, text="Load Data into Model", command=load_data_to_model, bg="blue")
 load_button.grid(column=0, row=7, padx=3, pady=3, sticky="ew")
-plot_button = tk.Button(window, text="Plot DateTime Data", command=plot_data_datetime, bg="green")
+plot_button = tk.Button(window, text="Plot DateTime Data", command=plot_data, bg="green")
 plot_button.grid(column=0, row=8, padx=3, pady=3, sticky="ew")
 clear_button = tk.Button(window, text="Clear Data", command=clear_data)
 clear_button.grid(column=0, row=9, padx=3, pady=3, sticky="ew")
