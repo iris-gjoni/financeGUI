@@ -2,15 +2,20 @@ from datetime import datetime
 import pandas as pd
 
 
-def plot_data(selected_names, selected_options, selected_multipliers,
+def plot_data(selected_names, y_vals, x_vals, selected_multipliers,
               selected_graph_type, ax, canvas, searchfile, suffix):
 
     for i, name in enumerate(selected_names):
         final_string: str = searchfile + name + suffix
-        print("final string {}", final_string)
+        # print("final string {}", final_string)
         df = pd.read_csv(final_string)
-        x_values = [datetime.strptime(date, '%Y-%m-%d') for date in df['Date']]
-        y_values: float = df[selected_options[i]] * selected_multipliers[i]
+        if x_vals[i] == 'Date':
+            x_values = [datetime.strptime(date, '%Y-%m-%d') for date in df['Date']]
+        else:
+            x_values = df[x_vals[i]]
+        y_values: float = df[y_vals[i]] * selected_multipliers[i]
+        # print("x: ", x_values)
+        # print("y: ", y_values)
         plot_graph(selected_graph_type, name, x_values, y_values, ax)
 
     ax.set_title('Price Vs Date')

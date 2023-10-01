@@ -22,27 +22,30 @@ graph_types = ['line', 'scatter']
 
 def clear_data():
     ax.clear()
-    fields_combobox.set('')
+    y_field_combobox.set('')
     canvas.draw()
 
 
 def plot_data_datetime():
     selected_names = []
-    selected_options = []
+    x_vals = []
+    y_vals = []
     selected_multipliers = []
     entries = listbox.get(0, tk.END)
-    # print(entries)
+    print("entries", entries)
     for entry in entries:
         selected_names.append(keyValues.get(entry[0]))
-        selected_options.append(entry[1])
-        selected_multipliers.append(int(entry[2]))
+        y_vals.append(entry[1])
+        x_vals.append(entry[2])
+        selected_multipliers.append(int(entry[3]))
 
     selected_graph_type: str = graph_type_combobox.get()
     ax.clear()
 
     StandardPlotAgainstDate.plot_data(
         selected_names=selected_names,
-        selected_options=selected_options,
+        y_vals=y_vals,
+        x_vals=x_vals,
         selected_multipliers=selected_multipliers,
         selected_graph_type=selected_graph_type,
         ax=ax,
@@ -54,20 +57,24 @@ def plot_data_datetime():
 
 def read_file():
     if not (name_combobox.get() == '' or name_combobox.get() is None):
-        fields_combobox.config(state='normal')
+        y_field_combobox.config(state='normal')
+        x_field_combobox.config(state='normal')
         selected_name = keyValues.get(name_combobox.get())
-        finalstring: str = searchfile + selected_name + suffix
+        final_string: str = searchfile + selected_name + suffix
         # print("final string {}", finalstring)
-        df = pd.read_csv(finalstring)
-        fields_combobox['values'] = df.columns.tolist()
-
+        df = pd.read_csv(final_string)
+        fields_list = df.columns.tolist()
+        y_field_combobox['values'] = fields_list
+        x_field_combobox['values'] = fields_list
+        if fields_list.__contains__("Date"):
+            x_field_combobox.set("Date")
 
 def load_data_to_model():
     name = name_combobox.get()
-    field = fields_combobox.get()
+    field = y_field_combobox.get()
     multiplier = multiplier_combobox.get()
     if name and field and multiplier:
-        row = [name, field, multiplier]
+        row = [name, field, "Date", multiplier]
         listbox.insert(tk.END, row)
 
 
@@ -75,6 +82,13 @@ def remove_entry():
     curselection = listbox.curselection()
     if curselection:
         listbox.delete(curselection)
+
+
+def on_name_change(event):
+    x_field_combobox['values'] = []
+    x_field_combobox.set('')
+    y_field_combobox['values'] = []
+    y_field_combobox.set('')
 
 
 # Create the main window
@@ -87,15 +101,19 @@ name_label = tk.Label(window, text="Select Stock:")
 name_label.grid(column=0, row=0, padx=3, pady=3, sticky="ew")
 name_combobox = ttk.Combobox(window, values=names)
 name_combobox.grid(column=0, row=1, padx=3, pady=3, sticky="ew")
-fields_combobox = ttk.Combobox(window)
-fields_combobox.config(state='disabled')
-fields_combobox.grid(column=0, row=2, padx=3, pady=3, sticky="ew")
+name_combobox.bind("<<ComboboxSelected>>", on_name_change)
+y_field_combobox = ttk.Combobox(window)
+y_field_combobox.config(state='disabled')
+y_field_combobox.grid(column=0, row=2, padx=3, pady=3, sticky="ew")
+x_field_combobox = ttk.Combobox(window)
+x_field_combobox.config(state='disabled')
+x_field_combobox.grid(column=0, row=3, padx=3, pady=3, sticky="ew")
 multiplier_combobox = ttk.Combobox(window, values=multipliers)
 multiplier_combobox.set(1)
-multiplier_combobox.grid(column=0, row=3, padx=3, pady=3, sticky="ew")
+multiplier_combobox.grid(column=0, row=4, padx=3, pady=3, sticky="ew")
 graph_type_combobox = ttk.Combobox(window, values=graph_types)
 graph_type_combobox.set('line')
-graph_type_combobox.grid(column=0, row=4, padx=3, pady=3, sticky="ew")
+graph_type_combobox.grid(column=0, row=5, padx=3, pady=3, sticky="ew")
 
 listbox = tk.Listbox(window, selectmode=tk.SINGLE, exportselection=0)
 listbox.grid(column=1, row=0, rowspan=3, padx=3, pady=3)
@@ -112,14 +130,14 @@ toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
 GUIOrganisation.set_grid_sizes(window)
 
 # Buttons
-plot_button = tk.Button(window, text="Plot DateTime Data", command=plot_data_datetime)
-plot_button.grid(column=0, row=7, padx=3, pady=3, sticky="ew")
-clear_button = tk.Button(window, text="Clear Data", command=clear_data)
-clear_button.grid(column=0, row=8, padx=3, pady=3, sticky="ew")
-load_button = tk.Button(window, text="Read Csv Data", command=read_file)
-load_button.grid(column=0, row=5, padx=3, pady=3, sticky="ew")
-read_button = tk.Button(window, text="Load Data into Model", command=load_data_to_model)
+read_button = tk.Button(window, text="Read Csv Data", command=read_file)
 read_button.grid(column=0, row=6, padx=3, pady=3, sticky="ew")
+load_button = tk.Button(window, text="Load Data into Model", command=load_data_to_model, bg="blue")
+load_button.grid(column=0, row=7, padx=3, pady=3, sticky="ew")
+plot_button = tk.Button(window, text="Plot DateTime Data", command=plot_data_datetime, bg="green")
+plot_button.grid(column=0, row=8, padx=3, pady=3, sticky="ew")
+clear_button = tk.Button(window, text="Clear Data", command=clear_data)
+clear_button.grid(column=0, row=9, padx=3, pady=3, sticky="ew")
 remove_entry_button = tk.Button(window, text="remove selected", command=remove_entry)
 remove_entry_button.grid(column=2, row=1, padx=3, pady=3, sticky="ew")
 
