@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import ReadStockNames
-import StandardPlotAgainstDate
+import StandardPlot
 import GUISizing
 
 # add new data sets into stockToName.txt
@@ -43,7 +43,7 @@ def plot_data():
     selected_graph_type: str = graph_type_combobox.get()
     ax.clear()
 
-    StandardPlotAgainstDate.plot_data(
+    StandardPlot.plot_data(
         selected_names=selected_names,
         y_vals=y_vals,
         x_vals=x_vals,
@@ -91,6 +91,7 @@ def on_name_change(event):
     x_field_combobox.set('')
     y_field_combobox['values'] = []
     y_field_combobox.set('')
+    read_file()
 
 
 # Create the main window
@@ -117,7 +118,7 @@ graph_type_combobox = ttk.Combobox(window, values=graph_types)
 graph_type_combobox.set('line')
 graph_type_combobox.grid(column=0, row=5, padx=3, pady=3, sticky="ew")
 
-listbox = tk.Listbox(window, selectmode=tk.SINGLE, exportselection=0)
+listbox = tk.Listbox(window, width=250, selectmode=tk.SINGLE, exportselection=0)
 listbox.grid(column=1, row=0, rowspan=3, padx=3, pady=3)
 
 # graph
@@ -133,13 +134,13 @@ GUISizing.set_grid_sizes(window)
 
 # Buttons
 read_button = tk.Button(window, text="Read Csv Data", command=read_file)
-read_button.grid(column=0, row=6, padx=3, pady=3, sticky="ew")
+read_button.grid(column=0, row=6, padx=10, pady=3, sticky="ew")
 load_button = tk.Button(window, text="Load Data into Model", command=load_data_to_model, bg="blue")
-load_button.grid(column=0, row=7, padx=3, pady=3, sticky="ew")
+load_button.grid(column=0, row=7, padx=10, pady=3, sticky="ew")
 plot_button = tk.Button(window, text="Plot DateTime Data", command=plot_data, bg="green")
-plot_button.grid(column=0, row=8, padx=3, pady=3, sticky="ew")
+plot_button.grid(column=0, row=8, padx=10, pady=3, sticky="ew")
 clear_button = tk.Button(window, text="Clear Data", command=clear_data)
-clear_button.grid(column=0, row=9, padx=3, pady=3, sticky="ew")
+clear_button.grid(column=0, row=9, padx=10, pady=3, sticky="ew")
 remove_entry_button = tk.Button(window, text="remove selected", command=remove_entry)
 remove_entry_button.grid(column=2, row=1, padx=3, pady=3, sticky="ew")
 
