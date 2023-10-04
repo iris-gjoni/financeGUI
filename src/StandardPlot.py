@@ -2,18 +2,18 @@ import pandas as pd
 import DateFormattingHelper
 
 
-def plot_data(selected_names, y_vals, x_vals, selected_multipliers,
+def plot_data(selected_names, y_vals, x_vals, selected_multipliers, options,
               selected_graph_type, ax, canvas, searchfile, suffix):
 
     for i, name in enumerate(selected_names):
         y_field = y_vals[i]
         x_field = x_vals[i]
         graph_info = get_graph_info(name, x_field, y_field)
-
         final_string: str = searchfile + name + suffix
-        # print("final string {}", final_string)
+
         df = pd.read_csv(final_string)
         y_values: float = df[y_vals[i]] * selected_multipliers[i]
+
         if x_field == 'Date':
             x_values = [DateFormattingHelper.parse_date(date) for date in df['Date']]
         elif x_field == 'date':
@@ -24,10 +24,25 @@ def plot_data(selected_names, y_vals, x_vals, selected_multipliers,
         # print("y: ", y_values)
         plot_graph(selected_graph_type, graph_info, x_values, y_values, ax)
 
+
+        for o in options[name]:
+            string_o = str(o)
+            if "14dMA" in string_o:
+                plot_ma_with_num(14, "14dMA", ax, df, graph_info, i, selected_graph_type, x_values, y_vals)
+            elif "50dMA" in string_o:
+                plot_ma_with_num(50, "50dMA", ax, df, graph_info, i, selected_graph_type, x_values, y_vals)
+            elif "200dMA" in string_o:
+                plot_ma_with_num(200, "200dMA", ax, df, graph_info, i, selected_graph_type, x_values, y_vals)
+
     ax.set_title('Price Vs Date')
-    # ax.set_ylabel()
     ax.legend()
     canvas.draw()
+
+
+def plot_ma_with_num(num, ma_name, ax, df, graph_info, i, selected_graph_type, x_values, y_vals):
+    mv_y_values: float = df[y_vals[i]].rolling(window=num).mean()
+    ma_info = graph_info + ma_name
+    plot_graph(selected_graph_type, ma_info, x_values, mv_y_values, ax)
 
 
 def get_graph_info(name, x_field, y_field):

@@ -1,14 +1,20 @@
 1) add a correlation metric
 
 2) add a x to Y graph mapping rather than only time-series
+    - maybe in a new page
+
+3) add moving averages 50d 14d 200d day ect..
 
 3) DONE add ability to overlap many graphs
 
-4) test with other format csv files
+4) DONE test with other format csv files
 
 5) generate .exe file using pythoninstaller and test running standalone executable
+    - didnt work try again
 
-6) add unit tests
+6) DONE add ability to load data from Yahoo on the fly
+
+7) add unit tests
 
 import unittest
 from my_module import my_function

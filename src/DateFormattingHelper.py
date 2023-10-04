@@ -19,6 +19,8 @@ def parse_date(date_string):
         "%Y/%m/%d",
         "%b %d, %Y",  # Example: Jan 01, 2021
         "%B %d, %Y",  # Example: January 01, 2021
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M:%S",
         # Add more formats as needed
     ]
 

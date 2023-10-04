@@ -1,4 +1,5 @@
 apple=AAPL
+microStrategy=MSTR
 AMD=AMD
 amazon=AMZN
 Bae=BA.L

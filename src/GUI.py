@@ -7,6 +7,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import ReadStockNames
 import StandardPlot
 import GUISizing
+import YahooFinUtil
 
 # add new data sets into stockToName.txt
 keyValues = ReadStockNames.read_key_value_file("stockToName.txt")
@@ -32,10 +33,13 @@ def plot_data():
     x_vals = []
     y_vals = []
     selected_multipliers = []
+    options = {}
     entries = listbox.get(0, tk.END)
     print("entries", entries)
     for entry in entries:
-        selected_names.append(keyValues.get(entry[0]))
+        name = keyValues.get(entry[0])
+        check_options(entry, name, options)
+        selected_names.append(name)
         y_vals.append(entry[1])
         x_vals.append(entry[2])
         selected_multipliers.append(int(entry[3]))
@@ -48,12 +52,31 @@ def plot_data():
         y_vals=y_vals,
         x_vals=x_vals,
         selected_multipliers=selected_multipliers,
+        options=options,
         selected_graph_type=selected_graph_type,
         ax=ax,
         canvas=canvas,
         searchfile=searchfile,
         suffix=suffix
     )
+
+
+def check_options(entry, name, options):
+    if len(entry) >= 5:
+        append_value(options, name, entry[4])
+    if len(entry) >= 6:
+        append_value(options, name, entry[5])
+    if len(entry) >= 7:
+        append_value(options, name, entry[6])
+    if len(entry) <= 4:
+        append_value(options, name, "0")
+
+
+def append_value(dict_obj, key, value):
+    if key in dict_obj:
+        dict_obj[key].append(value)
+    else:
+        dict_obj[key] = [value]
 
 
 def read_file():
@@ -95,6 +118,30 @@ def on_name_change(event):
     y_field_combobox['values'] = []
     y_field_combobox.set('')
     read_file()
+
+
+def do_refresh():
+    name = name_combobox.get()
+    if name:
+        ticker = keyValues.get(name_combobox.get())
+        final_string: str = searchfile + ticker + suffix
+        YahooFinUtil.append_new_data(ticker, final_string)
+
+
+def apply_moving_average():
+    try:
+        select = listbox.curselection()
+        curselection = listbox.get(select)
+        ma = ma_num_combobox.get()
+        name_for_appending = str(ma) + "dMA"
+        tuples = {name_for_appending}
+        if name_for_appending not in curselection:
+            if curselection:
+                new_tuple = tuple((*curselection, *tuples))
+                listbox.delete(select)
+                listbox.insert(tk.END, new_tuple)
+    except:
+        print("no selection")
 
 
 # Create the main window
@@ -144,8 +191,15 @@ plot_button = tk.Button(window, text="Plot DateTime Data", command=plot_data, bg
 plot_button.grid(column=0, row=8, padx=10, pady=3, sticky="ew")
 clear_button = tk.Button(window, text="Clear Data", command=clear_data)
 clear_button.grid(column=0, row=9, padx=10, pady=3, sticky="ew")
-remove_entry_button = tk.Button(window, text="remove selected", command=remove_entry)
-remove_entry_button.grid(column=2, row=1, padx=3, pady=3, sticky="ew")
+refresh_data_entry_button = tk.Button(window, text="Load Latest Data (Yahoo)", command=do_refresh)
+refresh_data_entry_button.grid(column=0, row=10, padx=3, pady=3, sticky="ew")
+remove_entry_button = tk.Button(window, text="remove selected", command=remove_entry, width=150)
+remove_entry_button.grid(column=2, row=1, padx=10, pady=3, sticky="ew")
+add_moving_average_button = tk.Button(window, text="add moving average", command=apply_moving_average, width=150)
+add_moving_average_button.grid(column=2, row=2, padx=10, pady=3, sticky="ew")
+ma_num_combobox = ttk.Combobox(window, values=['14', '50', '200'])
+ma_num_combobox.set('14')
+ma_num_combobox.grid(column=3, row=2, padx=3, pady=3, sticky="ew")
 
 # Run the Tkinter event loop
 window.mainloop()
