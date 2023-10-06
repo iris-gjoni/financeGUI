@@ -1,5 +1,7 @@
 import csv
 import datetime
+import os
+
 import yahoo_fin.stock_info as si
 import DateFormattingHelper
 import pandas as pd
@@ -93,7 +95,40 @@ def append_new_data(ticker_name, filepath_for_test):
         else:
             print("emtpy data: ", data_from_server)
 
+
+def load_fresh_data(ticker):
+    directory = "c:/quant/historicalStockPrices/"
+    file_location = 'c:/quant/historicalStockPrices/historical_'
+    suffix = ".csv"
+    final_path = file_location + ticker + suffix
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    if os.path.exists(final_path):
+        print("Data already here")
+    else:
+        data = si.get_data(ticker)
+        print(data)
+        data.index.name = 'date'
+        data.drop('ticker', axis=1, inplace=True)
+        data.to_csv(final_path, index=True)
+
+
+def get_tickers():
+    sp500 = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0]
+    symbols_ = sp500["Symbol"]
+    return symbols_
+
 # ===== testing ===========
+
+
+def test_get_tickers():
+    get_tickers()
+
+
+def test_load_fresh_():
+    ticker = "ATVI"
+    load_fresh_data(ticker)
 
 
 def test_read_recent_row():
@@ -113,4 +148,6 @@ if __name__ == "__main__":
     # test_refresh_data()
     ticker = "AAPL"
     filepath = "c:/quant/historicalStockPrices/historical_AAPL.csv"
-    append_new_data(ticker, filepath)
+    # append_new_data(ticker, filepath)
+    # test_get_tickers()
+    test_load_fresh_()

@@ -1,3 +1,5 @@
+import datetime
+import os
 import tkinter as tk
 from tkinter import ttk
 import pandas as pd
@@ -135,6 +137,18 @@ def on_name_change(event):
         y_field_combobox.set("Close")
 
 
+def load_fresh():
+    final = searchfile + "AAPL" + suffix
+    if os.path.exists(final):
+        print("you already have data")
+    else:
+        tickers_sp500 = YahooFinUtil.get_tickers()
+        for t in tickers_sp500:
+            try:
+                YahooFinUtil.load_fresh_data(t)
+            except:
+                print(f"failed to load {t}")
+    
 
 def do_refresh():
     name = name_combobox.get()
@@ -193,9 +207,12 @@ def on_motion(event):
         x, y = event.xdata, event.ydata
         vline.set_xdata(x)
         hline.set_ydata(y)
-        x = mdates.num2date(event.xdata)
-        date_str = x.strftime('%Y-%m-%d')  # Format the datetime object as a string
-        xy_label.config(text=f'({date_str}, {y:.2f})')
+        if 0 < x < 100000:
+            x = mdates.num2date(event.xdata)
+            date_str = x.strftime('%Y-%m-%d')  # Format the datetime object as a string
+            xy_label.config(text=f'({date_str}, {y:.2f})')
+        else:
+            xy_label.config(text=f'({x}, {y:.2f})')
         canvas.draw()
 
 
@@ -256,6 +273,8 @@ clear_button = tk.Button(window, fg="white", bg='#555555', text="Clear Data", co
 clear_button.grid(column=0, row=9, padx=10, pady=3, sticky="ew")
 refresh_data_entry_button = tk.Button(window, fg="white", bg='#555555', text="Load Latest Data (Yahoo)", command=do_refresh)
 refresh_data_entry_button.grid(column=0, row=10, padx=10, pady=3, sticky="ew")
+load_fresh_button = tk.Button(window, fg="white", bg='#555555', text="get data first time", command=load_fresh)
+load_fresh_button.grid(column=0, row=11, padx=10, pady=3, sticky="ew")
 remove_entry_button = tk.Button(window, fg="white", bg='#555555', text="remove selected", command=remove_entry, width=150)
 remove_entry_button.grid(column=2, row=0, padx=10, pady=3, sticky="ew")
 add_moving_average_button = tk.Button(window, fg="white", bg='#555555', text="toggle moving average", command=apply_moving_average, width=150)

@@ -59,7 +59,7 @@ def get_graph_info(name, x_field, y_field):
 
 def plot_graph(selected_graph_type, selected_name, x_values, y_values, ax):
     if selected_graph_type == "line":
-        ax.plot(x_values, y_values, label=selected_name)
+        ax.plot(x_values, y_values, label=selected_name, linewidth=0.8)
     elif selected_graph_type == "scatter":
         ax.scatter(x_values, y_values, s=1, label=selected_name)
     elif selected_graph_type == "bar":
