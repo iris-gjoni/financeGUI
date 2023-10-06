@@ -24,23 +24,25 @@ def plot_data(selected_names, y_vals, x_vals, selected_multipliers, options,
         # print("y: ", y_values)
         plot_graph(selected_graph_type, graph_info, x_values, y_values, ax)
 
-
         for o in options[name]:
             string_o = str(o)
             if "14dMA" in string_o:
-                plot_ma_with_num(14, "14dMA", ax, df, graph_info, i, selected_graph_type, x_values, y_vals)
+                plot_ma_with_num(14, "14dMA", ax, df, graph_info, i, selected_graph_type,
+                                 x_values, y_vals, selected_multipliers[i])
             elif "50dMA" in string_o:
-                plot_ma_with_num(50, "50dMA", ax, df, graph_info, i, selected_graph_type, x_values, y_vals)
+                plot_ma_with_num(50, "50dMA", ax, df, graph_info, i, selected_graph_type,
+                                 x_values, y_vals, selected_multipliers[i])
             elif "200dMA" in string_o:
-                plot_ma_with_num(200, "200dMA", ax, df, graph_info, i, selected_graph_type, x_values, y_vals)
+                plot_ma_with_num(200, "200dMA", ax, df, graph_info, i, selected_graph_type,
+                                 x_values, y_vals, selected_multipliers[i])
 
     ax.set_title('Price Vs Date')
     ax.legend()
     canvas.draw()
 
 
-def plot_ma_with_num(num, ma_name, ax, df, graph_info, i, selected_graph_type, x_values, y_vals):
-    mv_y_values: float = df[y_vals[i]].rolling(window=num).mean()
+def plot_ma_with_num(num, ma_name, ax, df, graph_info, i, selected_graph_type, x_values, y_vals, mul):
+    mv_y_values: float = df[y_vals[i]].rolling(window=num).mean() * mul
     ma_info = graph_info + ma_name
     plot_graph(selected_graph_type, ma_info, x_values, mv_y_values, ax)
 

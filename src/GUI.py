@@ -117,6 +117,7 @@ def on_name_change(event):
     x_field_combobox.set('')
     y_field_combobox['values'] = []
     y_field_combobox.set('')
+    multiplier_combobox.set('1')
     read_file()
 
 
@@ -144,6 +145,24 @@ def apply_moving_average():
         print("no selection")
 
 
+def apply_multiplier():
+    try:
+        select = listbox.curselection()
+        curselection = listbox.get(select)
+        mul = multiplier_combobox.get()
+        # name_for_appending = str(ma) + "dMA"
+        # tuples = {name_for_appending}
+        # if name_for_appending not in curselection:
+        if curselection:
+            temp_list = list(curselection)
+            temp_list[3] = mul
+            new_tuple = tuple(temp_list)
+            listbox.delete(select)
+            listbox.insert(tk.END, new_tuple)
+    except:
+        print("no selection")
+
+
 # Create the main window
 window = tk.Tk()
 window.title("Tkinter with Matplotlib - graphing")
@@ -161,9 +180,6 @@ y_field_combobox.grid(column=0, row=2, padx=3, pady=3, sticky="ew")
 x_field_combobox = ttk.Combobox(window)
 x_field_combobox.config(state='disabled')
 x_field_combobox.grid(column=0, row=3, padx=3, pady=3, sticky="ew")
-multiplier_combobox = ttk.Combobox(window, values=multipliers)
-multiplier_combobox.set(1)
-multiplier_combobox.grid(column=0, row=4, padx=3, pady=3, sticky="ew")
 graph_type_combobox = ttk.Combobox(window, values=graph_types)
 graph_type_combobox.set('line')
 graph_type_combobox.grid(column=0, row=5, padx=3, pady=3, sticky="ew")
@@ -194,12 +210,17 @@ clear_button.grid(column=0, row=9, padx=10, pady=3, sticky="ew")
 refresh_data_entry_button = tk.Button(window, text="Load Latest Data (Yahoo)", command=do_refresh)
 refresh_data_entry_button.grid(column=0, row=10, padx=3, pady=3, sticky="ew")
 remove_entry_button = tk.Button(window, text="remove selected", command=remove_entry, width=150)
-remove_entry_button.grid(column=2, row=1, padx=10, pady=3, sticky="ew")
+remove_entry_button.grid(column=2, row=0, padx=10, pady=3, sticky="ew")
 add_moving_average_button = tk.Button(window, text="add moving average", command=apply_moving_average, width=150)
-add_moving_average_button.grid(column=2, row=2, padx=10, pady=3, sticky="ew")
-ma_num_combobox = ttk.Combobox(window, values=['14', '50', '200'])
+add_moving_average_button.grid(column=2, row=1, padx=10, pady=3, sticky="ew")
+add_multiplier_button = tk.Button(window, text="add multiplier", command=apply_multiplier, width=150)
+add_multiplier_button.grid(column=2, row=2, padx=10, pady=3, sticky="ew")
+ma_num_combobox = ttk.Combobox(window, values=['14', '50', '200'], width=50)
 ma_num_combobox.set('14')
-ma_num_combobox.grid(column=3, row=2, padx=3, pady=3, sticky="ew")
+ma_num_combobox.grid(column=3, row=1, padx=3, pady=3, sticky="ew")
+multiplier_combobox = ttk.Combobox(window, values=multipliers)
+multiplier_combobox.set(1)
+multiplier_combobox.grid(column=3, row=2, padx=3, pady=3, sticky="ew")
 
 # Run the Tkinter event loop
 window.mainloop()
