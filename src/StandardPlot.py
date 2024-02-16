@@ -35,9 +35,13 @@ def plot_data(selected_names, y_vals, x_vals, selected_multipliers, options,
             elif "200dMA" in string_o:
                 plot_ma_with_num(200, "200dMA", ax, df, graph_info, i, selected_graph_type,
                                  x_values, y_vals, selected_multipliers[i])
+            elif "1458dMA" in string_o:
+                plot_ma_with_num(1458, "1458dMA", ax, df, graph_info, i, selected_graph_type,
+                                 x_values, y_vals, selected_multipliers[i])
 
     ax.set_title('Price Vs Date')
     ax.legend()
+
     canvas.draw()
 
 
@@ -59,7 +63,7 @@ def get_graph_info(name, x_field, y_field):
 
 def plot_graph(selected_graph_type, selected_name, x_values, y_values, ax):
     if selected_graph_type == "line":
-        ax.plot(x_values, y_values, label=selected_name, linewidth=0.8)
+        ax.plot(x_values, y_values, label=selected_name, linewidth=0.8, scalex=True, scaley=True)
     elif selected_graph_type == "scatter":
         ax.scatter(x_values, y_values, s=1, label=selected_name)
     elif selected_graph_type == "bar":

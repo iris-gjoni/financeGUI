@@ -12,6 +12,9 @@ import StandardPlot
 import GUISizing
 import YahooFinUtil
 
+Font16 = 16
+Font12 = 12
+
 # add new data sets into stockToName.txt
 keyValues = ReadStockNames.read_key_value_file("stockToName.txt")
 tickers = list(keyValues.values())
@@ -216,15 +219,59 @@ def on_motion(event):
         canvas.draw()
 
 
+def on_resize(event):
+    height = window.winfo_height()
+    width = window.winfo_width()
+    if height < 1000 and width < 1000:
+        do_resize(1)
+    elif height < 2000 and width < 2000:
+        do_resize(1.5)
+    elif height < 3000 and width < 3000:
+        do_resize(2)
+
+
+def do_resize(multiplier):
+    name_label.config(font=("Arial", int(Font12 * multiplier)))
+    name_combobox.config(font=("Arial", int(Font12 * multiplier)))
+    y_field_combobox.config(font=("Arial", int(Font12 * multiplier)))
+    x_field_combobox.config(font=("Arial", int(Font12 * multiplier)))
+    graph_type_combobox.config(font=("Arial", int(Font12 * multiplier)))
+    xy_label.config(font=("Arial", int(Font16 * multiplier)))
+    remove_entry_button.config(font=("Arial", int(Font12 * multiplier)))
+    load_button.config(font=("Arial", int(Font12 * multiplier)))
+    plot_button.config(font=("Arial", int(Font12 * multiplier)))
+    clear_button.config(font=("Arial", int(Font12 * multiplier)))
+    refresh_data_entry_button.config(font=("Arial", int(Font12 * multiplier)))
+    load_fresh_button.config(font=("Arial", int(Font12 * multiplier)))
+    add_moving_average_button.config(font=("Arial", int(Font12 * multiplier)))
+    add_multiplier_button.config(font=("Arial", int(Font12 * multiplier)))
+    ma_num_combobox.config(font=("Arial", int(Font12 * multiplier)))
+    multiplier_combobox.config(font=("Arial", int(Font12 * multiplier)))
+    listbox.config(font=("Arial", int(Font12 * multiplier)))
+    set_font_size(multiplier)
+
+
+def set_font_size(multiplier):
+    new_font = ("Arial", int(Font12 * multiplier))
+    style.configure("TCombobox", font=new_font)
+    style.configure("TComboboxListbox", font=new_font)
+
+
 # Create the main window
 window = tk.Tk()
 window.title("Tkinter with Matplotlib - graphing")
-window.geometry("1200x1000")
+
+screen_width = int(window.winfo_screenwidth() * 2)
+screen_height = int(window.winfo_screenheight() * 2)
+size_screen = str(screen_width) + "x" + str(screen_height)
+print("screen size: " + size_screen)
+window.geometry(size_screen)
 window.configure(bg='#2E2E2E')
 
 style = ttk.Style()
 style.theme_use('alt')  # 'alt' is typically a good starting point for a dark theme
-style.configure("TCombobox", selectbackground='#2E2E2E', fieldbackground='#555555', background='#555555', foreground='white')
+style.configure("TCombobox", selectbackground='#2E2E2E', fieldbackground='#555555',
+                background='#555555', foreground='white', font=("Arial", int(Font16)))
 
 # user inputs
 name_label = tk.Label(window, text="Select Stock:", fg="white", bg='#555555')
@@ -254,11 +301,12 @@ canvas_widget.grid(column=1, row=3, columnspan=10, rowspan=17, padx=5, pady=5, s
 toolbar_frame = tk.Frame(master=window, bg='#555555')
 toolbar_frame.grid(column=1, row=21, columnspan=10, sticky="ew")
 toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
-xy_label = tk.Label(window, text="x:", fg="white", bg='#555555', font=("Arial", 16, "bold"))
+xy_label = tk.Label(window, text="x:", fg="white", bg='#555555', font=("Arial", Font16, "bold"))
 xy_label.grid(column=1, row=20, padx=3, pady=3, sticky="ew")
 canvas.mpl_connect('motion_notify_event', on_motion)
 # annotation = ax.annotate('', xy=(0, 0), color='white', fontsize=12)
 add_lines()
+window.bind('<Configure>', on_resize)
 
 GUISizing.set_grid_sizes(window)
 
@@ -281,10 +329,10 @@ add_moving_average_button = tk.Button(window, fg="white", bg='#555555', text="to
 add_moving_average_button.grid(column=2, row=1, padx=10, pady=3, sticky="ew")
 add_multiplier_button = tk.Button(window, fg="white", bg='#555555', text="add multiplier", command=apply_multiplier, width=150)
 add_multiplier_button.grid(column=2, row=2, padx=10, pady=3, sticky="ew")
-ma_num_combobox = ttk.Combobox(window, values=['14', '50', '200'], width=50)
+ma_num_combobox = ttk.Combobox(window, values=['14', '50', '200', '1458'], width=4)
 ma_num_combobox.set('200')
 ma_num_combobox.grid(column=3, row=1, padx=3, pady=3, sticky="ew")
-multiplier_combobox = ttk.Combobox(window, values=multipliers)
+multiplier_combobox = ttk.Combobox(window, values=multipliers, width=4)
 multiplier_combobox.set(1)
 multiplier_combobox.grid(column=3, row=2, padx=3, pady=3, sticky="ew")
 

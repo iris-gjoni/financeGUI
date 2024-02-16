@@ -1,10 +1,12 @@
 import csv
 import datetime
 import os
-
+import json
 import yahoo_fin.stock_info as si
 import DateFormattingHelper
 import pandas as pd
+import requests
+import re
 
 
 def refresh_data(ticker, start_date, end_date):
@@ -150,4 +152,4 @@ if __name__ == "__main__":
     filepath = "c:/quant/historicalStockPrices/historical_AAPL.csv"
     # append_new_data(ticker, filepath)
     # test_get_tickers()
-    test_load_fresh_()
+    # test_load_fresh_()

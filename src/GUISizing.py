@@ -1,8 +1,8 @@
 
 def set_grid_sizes(window):
-    window.grid_rowconfigure(0, weight=2, minsize="30")
-    window.grid_rowconfigure(1, weight=2, minsize="30")
-    window.grid_rowconfigure(2, weight=2, minsize="30")
+    window.grid_rowconfigure(0, weight=1, minsize="30")
+    window.grid_rowconfigure(1, weight=1, minsize="30")
+    window.grid_rowconfigure(2, weight=1, minsize="30")
     window.grid_rowconfigure(3, weight=1, minsize="30")
     window.grid_rowconfigure(4, weight=1, minsize="30")
     window.grid_rowconfigure(5, weight=1, minsize="30")
@@ -24,7 +24,7 @@ def set_grid_sizes(window):
     window.grid_rowconfigure(21, weight=1, minsize="30")
     window.grid_columnconfigure(0, weight=1, minsize="350")
     window.grid_columnconfigure(1, weight=1, minsize="250")
-    window.grid_columnconfigure(2, weight=1, minsize="150")
+    window.grid_columnconfigure(2, weight=1, minsize="250")
     window.grid_columnconfigure(3, weight=1, minsize="50")
     window.grid_columnconfigure(4, weight=1, minsize="30")
     window.grid_columnconfigure(5, weight=1, minsize="30")
